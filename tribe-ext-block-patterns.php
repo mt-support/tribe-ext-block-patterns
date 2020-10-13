@@ -88,7 +88,7 @@ class Tribe__Extension__Block_Patterns extends Tribe__Extension {
 				'tec-block-patterns/advanced-ticket-block',
 				array(
 					'title'       => __( 'Advanced Ticket Block', 'tribe-block-patterns' ),
-					'description' => _x( 'A call to action with a ticket form and countdown to the event..', 'tribe' ),
+					'description' => _x( 'A call to action with a ticket form and countdown to the event.', 'tribe' ),
 					'content'     => "<!-- wp:group {\"style\":{\"color\":{\"background\":\"#f9f7f4\"}}} -->\n<div class=\"wp-block-group has-background\" style=\"background-color:#f9f7f4\"><div class=\"wp-block-group__inner-container\"><!-- wp:columns -->\n<div class=\"wp-block-columns\"><!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:heading {\"level\":3} -->\n<h3>Register Today</h3>\n<!-- /wp:heading -->\n\n<!-- wp:shortcode -->\n[tribe_event_countdown id=\"5588\" complete=\"Hooray!\"]\n<!-- /wp:shortcode -->\n\n<!-- wp:paragraph -->\n<p>Add some text for a super snazzy call to action for folks to purchase tickets.</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:tribe/event-links /--></div>\n<!-- /wp:column -->\n\n<!-- wp:column -->\n<div class=\"wp-block-column\"><!-- wp:tribe/tickets -->\n<div class=\"wp-block-tribe-tickets\"><!-- wp:tribe/tickets-item -->\n<div class=\"wp-block-tribe-tickets-item\"></div>\n<!-- /wp:tribe/tickets-item --></div>\n<!-- /wp:tribe/tickets --></div>\n<!-- /wp:column --></div>\n<!-- /wp:columns --></div></div>\n<!-- /wp:group -->",
 					'categories'  => array( 'events' ),
 				)
