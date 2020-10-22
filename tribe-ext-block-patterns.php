@@ -73,65 +73,73 @@ class Tribe__Extension__Block_Patterns extends Tribe__Extension {
 
 		if ( ! class_exists( 'WP_Block_Patterns_Registry' ) ) {
 			return;
+
 		}
 
-		$patterns = [
-			// Organizer & Venue columns block.
-			'tec-block-patterns/organizer-venue-combo' => [
-				'title'       => __( 'Organizer & Venue Combo', 'tribe-block-patterns' ),
-				'description' => __( 'Organizer and venue details side-by-side.', 'tribe-block-patterns' ),
-				'content'     => '
-					<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
-						<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
-						<!-- wp:columns -->
-							<div class="wp-block-columns">
-							<!-- wp:column {"width":33.33} -->
-							<div class="wp-block-column" style="flex-basis:33.33%">
+		// the patterns require some placeholder content
+		$youtube_placeholder = apply_filters( 'tribe_ext_block_patterns_youtube_placeholder' , 'https://www.youtube.com/watch?v=Gm3bQVANtVo' );
+		$event_placeholder = apply_filters( 'tribe_ext_block_patterns_event_placeholder' , 'EVENT_ID' );
+
+		$patterns = [];
+
+		// Organizer & Venue columns block.
+		$patterns['tec-block-patterns/organizer-venue-combo'] = [
+			'title'       => __( 'Organizer & Venue Combo', 'tribe-block-patterns' ),
+			'description' => __( 'Organizer and venue details side-by-side.', 'tribe-block-patterns' ),
+			'content'     => '
+				<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
+					<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
+					<!-- wp:columns -->
+						<div class="wp-block-columns">
+						<!-- wp:column {"width":33.33} -->
+						<div class="wp-block-column" style="flex-basis:33.33%">
+
+						<!-- wp:paragraph -->
+						<p></p>
+						<!-- /wp:paragraph -->
+
+						<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
+							<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
+							<!-- wp:tribe/event-organizer /-->
 
 							<!-- wp:paragraph -->
 							<p></p>
 							<!-- /wp:paragraph -->
+							</div></div>
+						<!-- /wp:group --></div>
+						<!-- /wp:column -->
 
-							<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
-								<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
-								<!-- wp:tribe/event-organizer /-->
-
-								<!-- wp:paragraph -->
-								<p></p>
-								<!-- /wp:paragraph -->
-								</div></div>
-							<!-- /wp:group --></div>
-							<!-- /wp:column -->
-
-							<!-- wp:column {"width":66.66} -->
-							<div class="wp-block-column" style="flex-basis:66.66%">
-							<!-- wp:paragraph -->
-							<p> </p>
-							<!-- /wp:paragraph -->
-
-							<!-- wp:group {"backgroundColor":"white"} -->
-								<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
-
-								<!-- wp:tribe/event-venue /-->
-
-								<!-- wp:paragraph -->
-								<p></p>
-								<!-- /wp:paragraph -->
-								</div></div>
-							<!-- /wp:group --></div>
-							<!-- /wp:column --></div>
-						<!-- /wp:columns -->
-
+						<!-- wp:column {"width":66.66} -->
+						<div class="wp-block-column" style="flex-basis:66.66%">
 						<!-- wp:paragraph -->
-						<p></p>
-						<!-- /wp:paragraph --></div></div>
-					<!-- /wp:group -->
-					',
-				'categories'  => [ 'events' ],
-			],
+						<p> </p>
+						<!-- /wp:paragraph -->
 
+						<!-- wp:group {"backgroundColor":"white"} -->
+							<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
+
+							<!-- wp:tribe/event-venue /-->
+
+							<!-- wp:paragraph -->
+							<p></p>
+							<!-- /wp:paragraph -->
+							</div></div>
+						<!-- /wp:group --></div>
+						<!-- /wp:column --></div>
+					<!-- /wp:columns -->
+
+					<!-- wp:paragraph -->
+					<p></p>
+					<!-- /wp:paragraph --></div></div>
+				<!-- /wp:group -->
+			',
+			'categories'  => [ 'events' ],
+		];
+
+		// only add this pattern if they have Event Tickets
+		if ( class_exists( 'Tribe__Tickets__Main' ) ) {
 			// Advanced Ticket block.
-			'tec-block-patterns/advanced-ticket-block' => [
+			$patterns['tec-block-patterns/advanced-ticket-block'] = [
 				'title'       => __( 'Advanced Ticket Block', 'tribe-block-patterns' ),
 				'description' => __( 'A call to action with a ticket form and countdown to the event.', 'tribe-block-patterns' ),
 				'content'     => '
@@ -147,7 +155,7 @@ class Tribe__Extension__Block_Patterns extends Tribe__Extension {
 								<!-- /wp:heading -->
 
 								<!-- wp:shortcode -->
-								[tribe_event_countdown id="EVENT-ID" complete="Hooray!"]
+								[tribe_event_countdown id="' . $event_placeholder . '" complete="Hooray!"]
 								<!-- /wp:shortcode -->
 
 								<!-- wp:paragraph -->
@@ -174,257 +182,257 @@ class Tribe__Extension__Block_Patterns extends Tribe__Extension {
 					<!-- /wp:group -->
 				',
 				'categories'  => [ 'events' ],
-			],
+			];
+		}
 
-			// YouTube with events
-			'tec-block-patterns/embedded-video-events' => [
-				'title'       => __( 'YouTube With Events', 'tribe-block-patterns' ),
-				'description' => __( 'A YouTube video with three embedded events.', 'tribe-block-patterns' ),
-				'content'     => '
-					<!-- wp:group -->
-					<div class="wp-block-group"><div class="wp-block-group__inner-container">
+		// YouTube with events
+		$patterns['tec-block-patterns/embedded-video-events'] = [
+			'title'       => __( 'YouTube With Events', 'tribe-block-patterns' ),
+			'description' => __( 'A YouTube video with three embedded events.', 'tribe-block-patterns' ),
+			'content'     => '
+				<!-- wp:group -->
+				<div class="wp-block-group"><div class="wp-block-group__inner-container">
 
-					<!-- wp:core-embed/youtube {"url":"https://www.youtube.com/watch?v=Gm3bQVANtVo","type":"video","providerNameSlug":"youtube","className":"wp-embed-aspect-4-3 wp-has-aspect-ratio"} -->
-					<figure class="wp-block-embed-youtube wp-block-embed is-type-video is-provider-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
-					https://www.youtube.com/watch?v=Gm3bQVANtVo
-					</div></figure>
-					<!-- /wp:core-embed/youtube -->
+				<!-- wp:core-embed/youtube {"url":"' . $youtube_placeholder . '","type":"video","providerNameSlug":"youtube","className":"wp-embed-aspect-4-3 wp-has-aspect-ratio"} -->
+				<figure class="wp-block-embed-youtube wp-block-embed is-type-video is-provider-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+				' . $youtube_placeholder . '
+				</div></figure>
+				<!-- /wp:core-embed/youtube -->
 
-					<!-- wp:columns -->
-						<div class="wp-block-columns">
-						<!-- wp:column -->
-							<div class="wp-block-column">
-							<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
-								<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
-								<!-- wp:shortcode -->
-								[tribe_event_inline id="EVENT-ID"]
-								{title:linked}
-								{start_date}
-								{start_time}
-								[/tribe_event_inline]
-								<!-- /wp:shortcode -->
-								</div></div>
-							<!-- /wp:group -->
-							</div>
-						<!-- /wp:column -->
-
-						<!-- wp:column -->
-							<div class="wp-block-column">
-							<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
-								<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
-								<!-- wp:shortcode -->
-								[tribe_event_inline id="EVENT-ID"]
-								{title:linked}
-								{start_date}
-								{start_time}
-								[/tribe_event_inline]
-								<!-- /wp:shortcode -->
-								</div></div>
-							<!-- /wp:group -->
-							</div>
-						<!-- /wp:column -->
-
-						<!-- wp:column -->
-							<div class="wp-block-column">
-							<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
-								<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
-								<!-- wp:shortcode -->
-								[tribe_event_inline id="EVENT-ID"]
-								{title:linked}
-								{start_date}
-								{start_time}
-								[/tribe_event_inline]
-								<!-- /wp:shortcode -->
-								</div></div>
-							<!-- /wp:group -->
-
-							<!-- wp:paragraph -->
-							<p></p>
-							<!-- /wp:paragraph -->
-							</div>
-						<!-- /wp:column -->
+				<!-- wp:columns -->
+					<div class="wp-block-columns">
+					<!-- wp:column -->
+						<div class="wp-block-column">
+						<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
+							<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
+							<!-- wp:shortcode -->
+							[tribe_event_inline id="' . $event_placeholder . '"]
+							{title:linked}
+							{start_date}
+							{start_time}
+							[/tribe_event_inline]
+							<!-- /wp:shortcode -->
+							</div></div>
+						<!-- /wp:group -->
 						</div>
-					<!-- /wp:columns -->
+					<!-- /wp:column -->
 
-					<!-- wp:paragraph -->
-					<p></p>
-					<!-- /wp:paragraph -->
-					</div></div>
-					<!-- /wp:group -->
-				',
-				'categories'  => [ 'events' ],
-			],
+					<!-- wp:column -->
+						<div class="wp-block-column">
+						<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
+							<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
+							<!-- wp:shortcode -->
+							[tribe_event_inline id="' . $event_placeholder . '"]
+							{title:linked}
+							{start_date}
+							{start_time}
+							[/tribe_event_inline]
+							<!-- /wp:shortcode -->
+							</div></div>
+						<!-- /wp:group -->
+						</div>
+					<!-- /wp:column -->
 
-			// Sponsors block.
-			'tec-block-patterns/sponsors' => [
-				'title'       => __( 'Sponsors', 'tribe-block-patterns' ),
-				'description' => __( 'A group of images and links to list sponsors.', 'tribe-block-patterns' ),
-				'content'     => '
-					<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
-						<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
-						<!-- wp:heading {"align":"center","level":3} -->
-						<h3 class="has-text-align-center">Thanks to our sponsors</h3>
-						<!-- /wp:heading -->
+					<!-- wp:column -->
+						<div class="wp-block-column">
+						<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
+							<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
+							<!-- wp:shortcode -->
+							[tribe_event_inline id="' . $event_placeholder . '"]
+							{title:linked}
+							{start_date}
+							{start_time}
+							[/tribe_event_inline]
+							<!-- /wp:shortcode -->
+							</div></div>
+						<!-- /wp:group -->
 
-						<!-- wp:paragraph {"align":"center"} -->
-						<p class="has-text-align-center">A really short blurb. Add and remove columns as needed.</p>
+						<!-- wp:paragraph -->
+						<p></p>
 						<!-- /wp:paragraph -->
+						</div>
+					<!-- /wp:column -->
+					</div>
+				<!-- /wp:columns -->
 
-						<!-- wp:columns -->
-							<div class="wp-block-columns">
-							<!-- wp:column {"width":25} -->
-								<div class="wp-block-column" style="flex-basis:25%">
-								<!-- wp:group {"backgroundColor":"white"} -->
-									<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
+				<!-- wp:paragraph -->
+				<p></p>
+				<!-- /wp:paragraph -->
+				</div></div>
+				<!-- /wp:group -->
+			',
+			'categories'  => [ 'events' ],
+		];
 
-									<!-- wp:image {"align":"center","id":5583,"sizeSlug":"large","className":"is-style-default"} -->
-									<div class="wp-block-image is-style-default"><figure class="aligncenter size-large"><a href="https://theeventscalendar.com"><img src="http://tec-demo.local/wp-content/uploads/2020/10/the-events-calendar.png" alt="" class="wp-image-5583"/></a></figure></div>
-									<!-- /wp:image -->
-
-									<!-- wp:heading {"align":"center","level":4} -->
-									<h4 class="has-text-align-center"><a href="https://theeventscalendar.com">The Events Calendar</a></h4>
-									<!-- /wp:heading -->
-									</div></div>
-								<!-- /wp:group -->
-								</div>
-							<!-- /wp:column -->
-
-							<!-- wp:column {"width":25} -->
-								<div class="wp-block-column" style="flex-basis:25%">
-								<!-- wp:group {"backgroundColor":"white"} -->
-									<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
-
-									<!-- wp:image {"align":"center","id":5583,"sizeSlug":"large","className":"is-style-default"} -->
-									<div class="wp-block-image is-style-default"><figure class="aligncenter size-large"><a href="https://theeventscalendar.com"><img src="http://tec-demo.local/wp-content/uploads/2020/10/the-events-calendar.png" alt="" class="wp-image-5583"/></a></figure></div>
-									<!-- /wp:image -->
-
-									<!-- wp:heading {"align":"center","level":4} -->
-									<h4 class="has-text-align-center"><a href="https://theeventscalendar.com">The Events Calendar</a></h4>
-									<!-- /wp:heading -->
-									</div></div>
-								<!-- /wp:group -->
-								</div>
-							<!-- /wp:column -->
-
-							<!-- wp:column {"width":25} -->
-								<div class="wp-block-column" style="flex-basis:25%">
-								<!-- wp:group {"backgroundColor":"white"} -->
-									<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container"><!-- wp:image {"align":"center","id":5583,"sizeSlug":"large","className":"is-style-default"} -->
-									<div class="wp-block-image is-style-default"><figure class="aligncenter size-large"><a href="https://theeventscalendar.com"><img src="http://tec-demo.local/wp-content/uploads/2020/10/the-events-calendar.png" alt="" class="wp-image-5583"/></a></figure></div>
-									<!-- /wp:image -->
-
-									<!-- wp:heading {"align":"center","level":4} -->
-									<h4 class="has-text-align-center"><a href="https://theeventscalendar.com">The Events Calendar</a></h4>
-									<!-- /wp:heading -->
-									</div></div>
-								<!-- /wp:group -->
-								</div>
-							<!-- /wp:column -->
-
-							<!-- wp:column {"width":25} -->
-								<div class="wp-block-column" style="flex-basis:25%">
-								<!-- wp:group {"backgroundColor":"white"} -->
-									<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
-
-									<!-- wp:image {"align":"center","id":5583,"sizeSlug":"large","className":"is-style-default"} -->
-									<div class="wp-block-image is-style-default"><figure class="aligncenter size-large"><a href="https://theeventscalendar.com"><img src="http://tec-demo.local/wp-content/uploads/2020/10/the-events-calendar.png" alt="" class="wp-image-5583"/></a></figure></div>
-									<!-- /wp:image -->
-
-									<!-- wp:heading {"align":"center","level":4} -->
-									<h4 class="has-text-align-center"><a href="https://theeventscalendar.com">The Events Calendar</a></h4>
-									<!-- /wp:heading -->
-
-									</div></div>
-								<!-- /wp:group -->
-								</div>
-							<!-- /wp:column -->
-							</div>
-						<!-- /wp:columns -->
-						</div></div>
-					<!-- /wp:group -->
-				',
-				'categories'  => [ 'events' ],
-			],
-
-			// FAQ block.
-			'tec-block-patterns/faq' => [
-				'title'       => __( 'FAQ', 'tribe-block-patterns' ),
-				'description' => __( 'Columns for commonly asked questions.', 'tribe-block-patterns' ),
-				'content'     => '
-					<!-- wp:group {"style":{"color":{"background":"#f9f7f4","text":"#746a59"}}} -->
-					<div class="wp-block-group has-text-color has-background" style="background-color:#f9f7f4;color:#746a59"><div class="wp-block-group__inner-container">
-
-					<!-- wp:heading {"level":3} -->
-					<h3>Frequently Asked Questions</h3>
+		// Sponsors block.
+		$patterns['tec-block-patterns/sponsors'] = [
+			'title'       => __( 'Sponsors', 'tribe-block-patterns' ),
+			'description' => __( 'A group of images and links to list sponsors.', 'tribe-block-patterns' ),
+			'content'     => '
+				<!-- wp:group {"style":{"color":{"background":"#f9f7f4"}}} -->
+					<div class="wp-block-group has-background" style="background-color:#f9f7f4"><div class="wp-block-group__inner-container">
+					<!-- wp:heading {"align":"center","level":3} -->
+					<h3 class="has-text-align-center">Thanks to our sponsors</h3>
 					<!-- /wp:heading -->
 
+					<!-- wp:paragraph {"align":"center"} -->
+					<p class="has-text-align-center">A really short blurb. Add and remove columns as needed.</p>
+					<!-- /wp:paragraph -->
+
 					<!-- wp:columns -->
 						<div class="wp-block-columns">
-						<!-- wp:column -->
-							<div class="wp-block-column">
-							<!-- wp:group -->
-								<div class="wp-block-group"><div class="wp-block-group__inner-container"><!-- wp:heading {"level":4} -->
-								<h4>Question 1</h4>
+						<!-- wp:column {"width":25} -->
+							<div class="wp-block-column" style="flex-basis:25%">
+							<!-- wp:group {"backgroundColor":"white"} -->
+								<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
+
+								<!-- wp:image {"align":"center","width":64,"height":64,"sizeSlug":"large","className":"is-style-rounded"} -->
+								<div class="wp-block-image is-style-rounded"><figure class="aligncenter size-large is-resized"><img src="https://s.w.org/images/core/5.5/don-quixote-03.jpg" alt="' . __( 'Pencil drawing of Don Quixote' ) . '" width="64" height="64"/></figure></div>
+								<!-- /wp:image -->
+
+								<!-- wp:heading {"align":"center","level":4} -->
+								<h4 class="has-text-align-center"><a href="#sponsor1">Sponsor 1</a></h4>
 								<!-- /wp:heading -->
-
-								<!-- wp:paragraph -->
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi lacus, hendrerit non odio id, venenatis bibendum dolor.</p>
-								<!-- /wp:paragraph -->
-								</div></div>
-								<!-- /wp:group -->
-
-								<!-- wp:group -->
-								<div class="wp-block-group"><div class="wp-block-group__inner-container">
-								<!-- wp:heading {"level":4} -->
-								<h4>Question 2</h4>
-								<!-- /wp:heading -->
-
-								<!-- wp:paragraph -->
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi lacus, hendrerit non odio id, venenatis bibendum dolor.</p>
-								<!-- /wp:paragraph -->
 								</div></div>
 							<!-- /wp:group -->
 							</div>
 						<!-- /wp:column -->
 
-						<!-- wp:column -->
-							<div class="wp-block-column">
-							<!-- wp:group -->
-								<div class="wp-block-group"><div class="wp-block-group__inner-container">
-								<!-- wp:heading {"level":4} -->
-								<h4>Question 3</h4>
-								<!-- /wp:heading -->
+						<!-- wp:column {"width":25} -->
+							<div class="wp-block-column" style="flex-basis:25%">
+							<!-- wp:group {"backgroundColor":"white"} -->
+								<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
 
-								<!-- wp:paragraph -->
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi lacus, hendrerit non odio id, venenatis bibendum dolor.</p>
-								<!-- /wp:paragraph -->
+								<!-- wp:image {"align":"center","width":64,"height":64,"sizeSlug":"large","className":"is-style-rounded"} -->
+								<div class="wp-block-image is-style-rounded"><figure class="aligncenter size-large is-resized"><img src="https://s.w.org/images/core/5.5/don-quixote-03.jpg" alt="' . __( 'Pencil drawing of Don Quixote' ) . '" width="64" height="64"/></figure></div>
+								<!-- /wp:image -->
+
+								<!-- wp:heading {"align":"center","level":4} -->
+								<h4 class="has-text-align-center"><a href="#sponsor2">Sponsor 2</a></h4>
+								<!-- /wp:heading -->
 								</div></div>
 							<!-- /wp:group -->
+							</div>
+						<!-- /wp:column -->
 
-							<!-- wp:group -->
-								<div class="wp-block-group"><div class="wp-block-group__inner-container">
-								<!-- wp:heading {"level":4} -->
-								<h4>Question 4</h4>
+						<!-- wp:column {"width":25} -->
+							<div class="wp-block-column" style="flex-basis:25%">
+							<!-- wp:group {"backgroundColor":"white"} -->
+								<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
+
+								<!-- wp:image {"align":"center","width":64,"height":64,"sizeSlug":"large","className":"is-style-rounded"} -->
+								<div class="wp-block-image is-style-rounded"><figure class="aligncenter size-large is-resized"><img src="https://s.w.org/images/core/5.5/don-quixote-03.jpg" alt="' . __( 'Pencil drawing of Don Quixote' ) . '" width="64" height="64"/></figure></div>
+								<!-- /wp:image -->
+
+								<!-- wp:heading {"align":"center","level":4} -->
+								<h4 class="has-text-align-center"><a href="#sponsor2">Sponsor 3</a></h4>
 								<!-- /wp:heading -->
-
-								<!-- wp:paragraph -->
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras nisi lacus, hendrerit non odio id, venenatis bibendum dolor.</p>
-								<!-- /wp:paragraph -->
 								</div></div>
 							<!-- /wp:group -->
+							</div>
+						<!-- /wp:column -->
 
-							<!-- wp:paragraph -->
-							<p></p>
-							<!-- /wp:paragraph -->
+						<!-- wp:column {"width":25} -->
+							<div class="wp-block-column" style="flex-basis:25%">
+							<!-- wp:group {"backgroundColor":"white"} -->
+								<div class="wp-block-group has-white-background-color has-background"><div class="wp-block-group__inner-container">
+
+								<!-- wp:image {"align":"center","width":64,"height":64,"sizeSlug":"large","className":"is-style-rounded"} -->
+								<div class="wp-block-image is-style-rounded"><figure class="aligncenter size-large is-resized"><img src="https://s.w.org/images/core/5.5/don-quixote-03.jpg" alt="' . __( 'Pencil drawing of Don Quixote' ) . '" width="64" height="64"/></figure></div>
+								<!-- /wp:image -->
+
+								<!-- wp:heading {"align":"center","level":4} -->
+								<h4 class="has-text-align-center"><a href="#sponsor2">Sponsor 4</a></h4>
+								<!-- /wp:heading -->
+
+								</div></div>
+							<!-- /wp:group -->
 							</div>
 						<!-- /wp:column -->
 						</div>
 					<!-- /wp:columns -->
 					</div></div>
-					<!-- /wp:group -->
-				',
-				'categories'  => [ 'events' ],
-			],
+				<!-- /wp:group -->
+			',
+			'categories'  => [ 'events' ],
+		];
+
+		// FAQ block.
+		$patterns['tec-block-patterns/faq'] = [
+			'title'       => __( 'FAQ', 'tribe-block-patterns' ),
+			'description' => __( 'Columns for commonly asked questions.', 'tribe-block-patterns' ),
+			'content'     => '
+				<!-- wp:group {"style":{"color":{"background":"#f9f7f4","text":"#746a59"}}} -->
+				<div class="wp-block-group has-text-color has-background" style="background-color:#f9f7f4;color:#746a59"><div class="wp-block-group__inner-container">
+
+				<!-- wp:heading {"level":3} -->
+				<h3>Frequently Asked Questions</h3>
+				<!-- /wp:heading -->
+
+				<!-- wp:columns -->
+					<div class="wp-block-columns">
+					<!-- wp:column -->
+						<div class="wp-block-column">
+						<!-- wp:group -->
+							<div class="wp-block-group"><div class="wp-block-group__inner-container">
+							<!-- wp:heading {"level":4} -->
+							<h4>Where do I park?</h4>
+							<!-- /wp:heading -->
+
+							<!-- wp:paragraph -->
+							<p>Give directions of where folks should park or stop on public transit if this is an in-person event.</p>
+							<!-- /wp:paragraph -->
+							</div></div>
+						<!-- /wp:group -->
+
+						<!-- wp:group -->
+							<div class="wp-block-group"><div class="wp-block-group__inner-container">
+							<!-- wp:heading {"level":4} -->
+							<h4>How do I participate in this event?</h4>
+							<!-- /wp:heading -->
+
+							<!-- wp:paragraph -->
+							<p>We’d love to talk! Please submit a contact form on our site. We’re happy to talk to more sponsors, volunteers, entertainment… you name it.</p>
+							<!-- /wp:paragraph -->
+							</div></div>
+						<!-- /wp:group -->
+						</div>
+					<!-- /wp:column -->
+
+					<!-- wp:column -->
+						<div class="wp-block-column">
+						<!-- wp:group -->
+							<div class="wp-block-group"><div class="wp-block-group__inner-container">
+							<!-- wp:heading {"level":4} -->
+							<h4>Will the event be recorded?</h4>
+							<!-- /wp:heading -->
+
+							<!-- wp:paragraph -->
+							<p>Definitely! If you can’t make the live session, please sign up to receive updates when we share the recordings.</p>
+							<!-- /wp:paragraph -->
+							</div></div>
+						<!-- /wp:group -->
+
+						<!-- wp:group -->
+							<div class="wp-block-group"><div class="wp-block-group__inner-container">
+							<!-- wp:heading {"level":4} -->
+							<h4>What can I bring?</h4>
+							<!-- /wp:heading -->
+
+							<!-- wp:paragraph -->
+							<p>For example: Do bring: Water. Strollers. Blankets for sitting on the ground. Sunblock. Skateboard for the skate park area.
+							Do not bring: Pets. Ice chests. Drones.</p>
+							<!-- /wp:paragraph -->
+							</div></div>
+						<!-- /wp:group -->
+						</div>
+					<!-- /wp:column -->
+					</div>
+				<!-- /wp:columns -->
+				</div></div>
+				<!-- /wp:group -->
+			',
+			'categories'  => [ 'events' ],
 		];
 
 		$patterns = apply_filters( 'tribe_ext_block_patterns' , $patterns );
